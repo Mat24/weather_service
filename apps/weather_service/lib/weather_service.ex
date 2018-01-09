@@ -12,8 +12,9 @@ defmodule WeatherService do
       :world
 
   """
-  @spec get_weather(map) :: {:ok, map} | {:error, atom}
-  def get_weather(params) do
+  @spec get_weather(map) :: {:ok, String.t} | {:error, atom}
+  def get_weather(city) do
+    IO.inspect(city)
     {:ok, %{id: 1}}
   end
 end
