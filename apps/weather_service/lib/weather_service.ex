@@ -14,10 +14,10 @@ defmodule WeatherService do
       :world
 
   """
-  @spec get_weather(String.t, map) :: {:ok, String.t} | {:error, atom}
+  @spec get_weather(String.t, String.t) :: {:ok, String.t} | {:error, atom}
   def get_weather(correlation_id, city) do
     Logger.info("Getting Weather: #{correlation_id}")
     Weather.weather(%{city: city})
-    {:ok, %{id: 1}}
+    #{:ok, }}
   end
 end
