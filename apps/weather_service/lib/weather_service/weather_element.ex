@@ -11,7 +11,6 @@ defmodule WeatherElement do
             requested_time: nil
 
   def validate_params(params) do
-    IO.inspect params
     with {:ok, location_name} <- parse_location_name(params[:location_name]),
          {:ok, temperature} <- parse_temperature(params[:temperature]),
          {:ok, wind} <- parse_wind(params[:wind]),

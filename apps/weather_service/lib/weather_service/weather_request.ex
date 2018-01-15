@@ -2,7 +2,6 @@ defmodule WeatherRequest do
   defstruct city: nil
 
   def validate_params(params) do
-    IO.inspect params
     with {:ok, city} <- parse_city(params[:city]) do
       {:ok, %WeatherRequest{city: city}}
     else

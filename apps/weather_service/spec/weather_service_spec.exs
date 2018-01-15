@@ -4,27 +4,60 @@ defmodule WeatherServiceSpec do
 
   describe "Weather_service" do
     context "when the request is valid" do
-      let :response, do: "{\"coord\":{\"lon\":-74.08,\"lat\":4.6},\"weather\":[{\"id\":802,\"main\":\"Clouds\",\"description\":\"scattered clouds\",\"icon\":\"03d\"}],\"base\":\"stations\",\"main\":{\"temp\":290.15,\"pressure\":1024,\"humidity\":51,\"temp_min\":290.15,\"temp_max\":290.15},\"visibility\":10000,\"wind\":{\"speed\":5.1,\"deg\":60},\"clouds\":{\"all\":40},\"dt\":1515704400,\"sys\":{\"type\":1,\"id\":4245,\"message\":0.0044,\"country\":\"CO\",\"sunrise\":1515668896,\"sunset\":1515711664},\"id\":3688689,\"name\":\"Bogota\",\"cod\":200}"
+      let :response, do: shared.api_response
       let :valid_request, do: "Bogota"
       before do
-        # allow HTTPoison
-        # |> to(accept(:get, fn("mock.com/weather/city") -> {:ok, %HTTPoison.Response{
-        #   status_code: 200,
-        #   body: response()
-        # }}end))
+        allow HTTPoison
+        |> to(accept(:get,
+          fn
+            (_url) -> {:ok, %HTTPoison.Response{status_code: 200, body: response()}}
+          end
+        ))
       end 
       
       it "shoud return :ok" do
         "correlation_id"
         |> WeatherService.get_weather(valid_request())
-        |> IO.inspect
+        |> expect
+        |> to(be_ok_result())
+      end
+
+      it "should not return :blank response" do
+        "correlation_id"
+        |> WeatherService.get_weather(valid_request())
+        |> expect
+        |> to_not(eq nil)
+      end
+
+      it "should return a valid response structure" do
+
+        {:ok, response} = WeatherService.get_weather("correlation_id",
+                                                     valid_request())
+        
+        response |> Map.get(:temperature) |> expect |> to(eq "17 °C")
       end
 
       
     end
 
     context "when the request is invalid" do
-      
+      let :invalid_request, do: "12345"
+      let :response, do: "{\"cod\":\"404\",\"message\":\"city not found\"}"
+      before do
+        allow HTTPoison
+        |> to(accept(:get,
+          fn
+            (_url) -> {:ok, %HTTPoison.Response{status_code: 404, body: response()}}
+          end
+        ))
+      end 
+
+      it "should return :error" do
+        "correlation_id"
+        |> WeatherService.get_weather(invalid_request())
+        |> expect
+        |> to(be_error_result())
+      end
     end
   end
 end
