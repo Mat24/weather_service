@@ -17,6 +17,7 @@ defmodule Weather do
   
     case HTTPoison.get(endpoint) do
       {:ok, response} -> 
+        IO.inspect(response, label: "MALDITO POISON....!!!")
         case Poison.decode!(response.body) do
           %{"cod" => _, "message" => _} -> {:error, :not_found}
           response -> {:ok, response}

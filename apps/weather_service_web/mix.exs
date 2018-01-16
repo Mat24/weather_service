@@ -44,7 +44,8 @@ defmodule WeatherServiceWeb.Mixfile do
       {:gettext, "~> 0.11"},
       {:weather_service, in_umbrella: true},
       {:cowboy, "~> 1.0"},
-      {:espec_phoenix, "~> 0.6.9", only: :test}
+      {:espec_phoenix, "~> 0.6.9", only: :test},
+      {:ex_machina, "~> 2.1"}
     ]
   end
 
