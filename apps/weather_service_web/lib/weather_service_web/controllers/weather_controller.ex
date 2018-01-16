@@ -9,10 +9,12 @@ defmodule WeatherServiceWeb.WeatherController do
     with correlation_id  <- get_correlation_id(conn),
          {:ok, data} <- @weather_api.get_weather(correlation_id, city)
     do
-      IO.inspect data
       render conn, "show.json", %{weather: data}
     else
-      {:error, :not_found} -> render(conn, ErrorView, "404.json")
+      {:error, :not_found} -> 
+        conn
+        |> put_status(:not_found)
+        |> render(ErrorView, "404.json")
       error -> render(conn, ErrorView, "500.json")
     end
   end

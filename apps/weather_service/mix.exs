@@ -9,7 +9,7 @@ defmodule WeatherService.Mixfile do
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
-      elixir: "~> 1.4",
+      elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env),
       start_permanent: Mix.env == :prod,
       aliases: aliases(),
@@ -33,7 +33,7 @@ defmodule WeatherService.Mixfile do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "espec/support"]
+  defp elixirc_paths(:test), do: ["lib", "spec/support"]
   defp elixirc_paths(_),     do: ["lib"]
 
   # Specifies your project dependencies.

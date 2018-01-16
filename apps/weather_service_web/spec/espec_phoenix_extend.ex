@@ -14,8 +14,6 @@ defmodule ESpec.Phoenix.Extend do
       @endpoint WeatherServiceWeb.Endpoint
 
       def response_get(action, params) do
-        IO.inspect(action, label: "DEBUG_ACTION")
-        IO.inspect(params, label: "PARAMS_ACTION")
         ganerate_response()
         |> get(get_url(action, params))
       end
@@ -26,14 +24,11 @@ defmodule ESpec.Phoenix.Extend do
         |> put_req_header("accept", "application/json")
       end
 
-      def get_url(:index, params) do 
-        weather_path(@endpoint, :index, params)
+      def get_url(action, params) do 
+        # Mocking the routers
+        weather_path(@endpoint, action, params)
       end
 
-      # def get_url(action) do
-      #   weather_path(build_conn(), action)
-      # end
-      
       def get_status_code(response), do: response.status
       def get_body(response), do: response.resp_body |> Poison.decode!
       def get_params(response), do: response.params

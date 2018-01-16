@@ -7,7 +7,6 @@ defmodule WeatherServiceWeb.WeatherControllerSpec do
       it "" do
         :index 
         |> response_get(request())
-        |> IO.inspect
         |> get_status_code()
         |> expect
         |> to(eq 200)
@@ -16,16 +15,22 @@ defmodule WeatherServiceWeb.WeatherControllerSpec do
       it "" do
         :index 
         |> response_get(request())
-        |> IO.inspect
         |> get_body()
-        |> Map.get(:temperature)
+        |> Map.get("temperature")
         |> expect
         |> to(eq "23 °C")
       end
     end
 
     context "when the request is not valid" do
-      
+      let :request, do: "123"
+      it "" do
+        :index 
+        |> response_get(request())
+        |> get_status_code()
+        |> expect
+        |> to(eq 404)
+      end
     end
   end
 end
