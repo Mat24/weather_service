@@ -1,4 +1,5 @@
 defmodule WeatherServiceWeb.WeatherController do
+  require Logger
   use WeatherServiceWeb, :controller
   alias WeatherServiceWeb.ErrorView
 
@@ -9,6 +10,8 @@ defmodule WeatherServiceWeb.WeatherController do
     with correlation_id  <- get_correlation_id(conn),
          {:ok, data} <- @weather_api.get_weather(correlation_id, city)
     do
+      Logger.info("Preparing WEB response FROM: #{correlation_id} " <>
+                  "Response: #{inspect data}")
       render conn, "show.json", %{weather: data}
     else
       {:error, :not_found} -> 

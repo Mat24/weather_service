@@ -4,7 +4,7 @@ defmodule WeatherServiceWeb.WeatherControllerSpec do
   describe "WeatherControlleWeb" do
     context "when the request is valid" do
       let :request, do: "Cali"
-      it "" do
+      it "should return an :ok status code" do
         :index 
         |> response_get(request())
         |> get_status_code()
@@ -12,19 +12,24 @@ defmodule WeatherServiceWeb.WeatherControllerSpec do
         |> to(eq 200)
       end
 
-      it "" do
+      it "should return a valid temperature" do
         :index 
         |> response_get(request())
         |> get_body()
         |> Map.get("temperature")
+        |> String.split()
+        |> Enum.at(0) 
+        |> String.to_integer()
+        |> is_integer()
+        |> IO.inspect()
         |> expect
-        |> to(eq "23 °C")
+        |> to(be_true())
       end
     end
 
     context "when the request is not valid" do
       let :request, do: "123"
-      it "" do
+      it "should return an :error code" do
         :index 
         |> response_get(request())
         |> get_status_code()
