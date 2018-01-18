@@ -6,16 +6,11 @@ defmodule Utils do
          {:ok, time} <- get_hours(date)
     do
       time
-    else
-      err -> err
     end
 
   end
 
   defp get_hours(date_time) do
-    hours = date_time.hour
-    minutes = date_time.minute
-
-    {:ok, "#{hours}:#{minutes}"}
+    {:ok, "#{date_time.hour}:#{date_time.minute}"}
   end
 end

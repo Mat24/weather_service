@@ -19,8 +19,6 @@ defmodule WeatherService do
     Logger.info("Getting Weather: #{correlation_id}")
     with {:ok, weather} <- Weather.weather(%{city: city}, correlation_id) do
       {:ok, weather}
-    else
-      err -> err
     end
   end
 end

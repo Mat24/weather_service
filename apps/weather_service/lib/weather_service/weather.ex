@@ -3,16 +3,17 @@ defmodule Weather do
   # Error handling when city is invalid or nil
   def weather(params, correlation_id) do
     Logger.info("Task ID: #{correlation_id} has been started "<>
-    "with: #{inspect params}")
+                "with: #{inspect params}")
     with {:ok, validated_params} <-  WeatherRequest.validate_params(params),
          {:ok, response} <- get_from_api(validated_params),
          {:ok, weather_element} <- weather_data_cleaning(response),
          {:ok, processed_weather} <- weather_data_processor(weather_element)
     do
-      Logger.info("Task ID: #{correlation_id} has a update: #{inspect processed_weather}")
+      Logger.info("Task ID: #{correlation_id} has a update:"<>
+                  " #{inspect processed_weather}")
       {:ok, processed_weather}
     else
-      err -> IO.inspect err
+      err -> {:error, :internal_server_error}
     end
   end
 
@@ -25,9 +26,7 @@ defmodule Weather do
           %{"cod" => _, "message" => _} -> {:error, :not_found}
           response -> {:ok, response}
         end
-      error -> 
-        {:error, error}
-        
+      error -> {:error, error}
     end
   end
 
@@ -47,7 +46,6 @@ defmodule Weather do
       geo_coordinates: [get_in(weather_data, ["coord", "lat"])] ++ 
                        [get_in(weather_data, ["coord", "lon"])],
       requested_time: get_in(weather_data, ["dt"])}}
-
   end
 
   def weather_data_processor(weather_element) do

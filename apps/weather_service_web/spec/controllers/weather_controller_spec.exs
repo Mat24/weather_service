@@ -21,7 +21,6 @@ defmodule WeatherServiceWeb.WeatherControllerSpec do
         |> Enum.at(0) 
         |> String.to_integer()
         |> is_integer()
-        |> IO.inspect()
         |> expect
         |> to(be_true())
       end

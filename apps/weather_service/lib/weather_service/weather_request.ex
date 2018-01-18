@@ -4,8 +4,6 @@ defmodule WeatherRequest do
   def validate_params(params) do
     with {:ok, city} <- parse_city(params[:city]) do
       {:ok, %WeatherRequest{city: city}}
-    else
-      err -> err
     end
   end
 
