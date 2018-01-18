@@ -28,7 +28,7 @@ defmodule WeatherService.Mixfile do
   def application do
     [
       mod: {WeatherService.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :postgrex, :ecto]
     ]
   end
 
@@ -45,7 +45,9 @@ defmodule WeatherService.Mixfile do
       {:poison, "~> 3.1"},
       {:uuid, "~> 1.1" },
       {:espec, "~> 1.4.6", only: :test},
-      {:excoveralls, "~> 0.8", only: :test}
+      {:excoveralls, "~> 0.8", only: :test},
+      {:postgrex, ">= 0.0.0"},
+      {:ecto, "~> 2.2.8"}
     ]
   end
 

@@ -11,6 +11,6 @@ defmodule Utils do
   end
 
   defp get_hours(date_time) do
-    {:ok, "#{date_time.hour}:#{date_time.minute}"}
+    {:ok, DateTime.to_time(date_time)}
   end
 end

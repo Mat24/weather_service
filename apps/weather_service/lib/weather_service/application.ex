@@ -13,7 +13,7 @@ defmodule WeatherService.Application do
     import Supervisor.Spec, warn: false
 
     Supervisor.start_link([
-      
+      supervisor(WeatherService.Repo, [])
     ], strategy: :one_for_one, name: WeatherService.Supervisor)
   end
 end

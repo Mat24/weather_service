@@ -1,6 +1,6 @@
 defmodule WeatherService.Umbrella.Mixfile do
   use Mix.Project
-
+  
   def project do
     [
       apps_path: "apps",
@@ -25,9 +25,11 @@ defmodule WeatherService.Umbrella.Mixfile do
     []
   end
 
-  # defp aliases do
-  #   [
-  #     "test": ["MIX_ENV=test mix espec"]
-  #   ]
-  # end
+  defp aliases do
+    [
+      "ecto.setup": ["ecto.create",  "ecto.migrate"]
+    ]
+  end
+
+  
 end
