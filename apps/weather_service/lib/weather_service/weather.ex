@@ -4,16 +4,21 @@ defmodule Weather do
   def weather(params, correlation_id) do
     Logger.info("Task ID: #{correlation_id} has been started "<>
                 "with: #{inspect params}")
-    with {:ok, validated_params} <-  WeatherRequest.validate_params(params),
-         {:ok, response} <- get_from_api(validated_params),
-         {:ok, weather_element} <- weather_data_cleaning(response),
-         {:ok, processed_weather} <- weather_data_processor(weather_element)
-    do
-      Logger.info("Task ID: #{correlation_id} has a update:"<>
-                  " #{inspect processed_weather}")
-      {:ok, processed_weather}
-    else
-      err -> {:error, :internal_server_error}
+    case check_cache(params, DateTime.utc_now) do
+      true -> {:ok, true}# return stored data
+      false -> 
+        with {:ok, validated_params} <-  WeatherRequest.validate_params(params),
+             {:ok, response} <- get_from_api(validated_params),
+             {:ok, weather_element} <- weather_data_cleaning(response),
+             {:ok, processed_weather} <- weather_data_processor(weather_element),
+             {:ok, _} <- make_cache(processed_weather)
+        do
+          Logger.info("Task ID: #{correlation_id} has a update:"<>
+                      " #{inspect processed_weather}")
+          {:ok, processed_weather}
+        else
+          err -> {:error, :internal_server_error}
+        end
     end
   end
 
@@ -32,7 +37,8 @@ defmodule Weather do
 
   def weather_data_cleaning(weather_data) do
 
-    {:ok, %{location_name: "#{get_in(weather_data, ["name"])}, "<>
+    {:ok, %{ city: "#{get_in(weather_data, ["name"])}",
+      location_name: "#{get_in(weather_data, ["name"])}, "<>
                            "#{get_in(weather_data, ["sys", "country"])}",
       temperature: get_in(weather_data, ["main", "temp"]),
       wind: get_in(weather_data, ["wind","speed"]),
@@ -61,8 +67,31 @@ defmodule Weather do
                       Utils.normal_time(weather_element.sunrise))
       |> Map.replace!(:sunset, Utils.normal_time(weather_element.sunset))
       |> Map.replace!(:requested_time, 
-                      Utils.normal_time(weather_element.requested_time))
+                      Utils.normalize_datetime(weather_element.requested_time))
     {:ok, processed_weather}
+  end
+
+  def check_cache(city, time) do
+    # IO.inspect Weather.Query.get_active_cache(city) #Pending to implemnet!
+    # query validation
+    false
+  end
+
+  def make_cache(weather_data) do
+    %WeatherService.WeatherCache{}
+    |> Map.replace!(:city, weather_data.city)
+    |> Map.replace!(:location_name, weather_data.location_name)
+    |> Map.replace!(:temperature, weather_data.temperature)
+    |> Map.replace!(:wind, weather_data.wind)
+    |> Map.replace!(:cloudines, weather_data.cloudines)
+    |> Map.replace!(:presure, weather_data.presure)
+    |> Map.replace!(:humidity, weather_data.humidity)
+    |> Map.replace!(:sunrise, weather_data.sunrise)
+    |> Map.replace!(:sunset, weather_data.sunset)
+    |> Map.replace!(:geo_coordinates, "#{inspect weather_data.geo_coordinates}")
+    |> Map.replace!(:requested_time, weather_data.requested_time)
+    |> WeatherService.Repo.insert!
+    {:ok, weather_data}
   end
 
   def get_api_url do

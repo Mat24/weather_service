@@ -13,4 +13,9 @@ defmodule Utils do
   defp get_hours(date_time) do
     {:ok, DateTime.to_time(date_time)}
   end
+
+  def normalize_datetime(datetime) do
+    {:ok, data} =  DateTime.from_unix(datetime)
+    data
+  end
 end
