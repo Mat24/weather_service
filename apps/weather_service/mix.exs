@@ -9,11 +9,16 @@ defmodule WeatherService.Mixfile do
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
-      elixir: "~> 1.4",
+      elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env),
       start_permanent: Mix.env == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      spec_paths: ["spec"],
+      spec_pattern: "*_spec.exs",
+      preferred_cli_env: [espec: :test],
+      # preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test]
+      test_coverage: [tool: ExCoveralls, test_task: "espec"]
     ]
   end
 
@@ -28,7 +33,7 @@ defmodule WeatherService.Mixfile do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:test), do: ["lib", "spec/support"]
   defp elixirc_paths(_),     do: ["lib"]
 
   # Specifies your project dependencies.
@@ -39,7 +44,8 @@ defmodule WeatherService.Mixfile do
       {:httpoison, "~> 0.13"},
       {:poison, "~> 3.1"},
       {:uuid, "~> 1.1" },
-      {:espec, "~> 1.4.6", only: :test}
+      {:espec, "~> 1.4.6", only: :test},
+      {:excoveralls, "~> 0.8", only: :test}
     ]
   end
 

@@ -3,6 +3,8 @@ defmodule WeatherService do
   Documentation for WeatherService.
   """
 
+  import Logger
+
   @doc """
   get weather from external api.
 
@@ -12,8 +14,11 @@ defmodule WeatherService do
       :world
 
   """
-  @spec get_weather(map) :: {:ok, map} | {:error, atom}
-  def get_weather(params) do
-    {:ok, %{id: 1}}
+  @spec get_weather(String.t, String.t) :: {:ok, String.t} | {:error, atom}
+  def get_weather(correlation_id, city) do
+    Logger.info("Getting Weather: #{correlation_id}")
+    with {:ok, weather} <- Weather.weather(%{city: city}, correlation_id) do
+      {:ok, weather}
+    end
   end
 end

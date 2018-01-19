@@ -24,4 +24,10 @@ defmodule WeatherService.Umbrella.Mixfile do
   defp deps do
     []
   end
+
+  # defp aliases do
+  #   [
+  #     "test": ["MIX_ENV=test mix espec"]
+  #   ]
+  # end
 end

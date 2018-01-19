@@ -9,7 +9,7 @@ defmodule WeatherServiceWeb.Mixfile do
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
-      elixir: "~> 1.4",
+      elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env),
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
@@ -29,7 +29,7 @@ defmodule WeatherServiceWeb.Mixfile do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:test), do: ["lib", "spec/support"]
   defp elixirc_paths(_),     do: ["lib"]
 
   # Specifies your project dependencies.
@@ -44,7 +44,8 @@ defmodule WeatherServiceWeb.Mixfile do
       {:gettext, "~> 0.11"},
       {:weather_service, in_umbrella: true},
       {:cowboy, "~> 1.0"},
-      {:espec_phoenix, "~> 0.6.9", only: :test}
+      {:espec_phoenix, "~> 0.6.9", only: :test},
+      {:ex_machina, "~> 2.1"}
     ]
   end
 

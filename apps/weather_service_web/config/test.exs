@@ -7,4 +7,4 @@ config :weather_service_web, WeatherServiceWeb.Endpoint,
   server: false
 
 config :weather_service_web,
-  :weather_service_module, WeatherService
+  :weather_service_module, WeatherServiceWeb.WeatherServiceMock
