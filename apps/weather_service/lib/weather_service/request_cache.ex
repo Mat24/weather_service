@@ -1,7 +1,9 @@
 defmodule WeatherService.WeatherCache do
   use Ecto.Schema
-
   import Ecto.Changeset
+  import Ecto.Query, only: [from: 2]
+  alias WeatherService.Repo
+  alias WeatherService.WeatherCache
 
   schema "weather_cache" do
     field :city, :string
@@ -25,16 +27,14 @@ defmodule WeatherService.WeatherCache do
   #                    :requested_time, :presure, :location_name, :humidity,
   #                    :geo_coordinates, :cloudines,])
   # end
+
+  def get_active_cache(city) do
+    query = from u in WeatherCache,
+    where: u.city == ^city,
+    select: u
+
+    Repo.all(query)
+  end
 end
 
 # WeatherService.Repo.insert! %WeatherService.WeatherCache{ city: "Cali Co", wind: "1.51 m/s", temperature: "24 °C", sunset: "23:15", sunrise: "11:18", requested_time: "16:0", presure: "1018 hpa", location_name: "Cali Co", humidity: "78%", geo_coordinates: "[3.43,-76.51]", cloudines: "broken clouds"}
-
-# :temperature,
-# :sunset,
-# :sunrise,
-# :requested_time,
-# :presure,
-# :location_name,
-# :humidity,
-# :geo_coordinates,
-# :cloudines,
